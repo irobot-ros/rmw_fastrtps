@@ -115,7 +115,7 @@ public:
         // Add the service to the event queue
         std::unique_lock<std::mutex> lock_mutex(executor_callback_mutex_);
 
-        if(use_executor_callback_) {
+        if(executor_callback_) {
           executor_callback_(executor_context_, { service_handle_, SERVICE_EVENT });
         } else {
           unread_count_++;
@@ -185,14 +185,13 @@ public:
       executor_context_ = executor_context;
       executor_callback_ = callback;
       service_handle_ = service_handle;
-      use_executor_callback_ = true;
     }
-    else {
+    else
+    {
        // Unset callback: If any of the pointers is NULL, do not use callback.
       executor_context_ = nullptr;
       executor_callback_ = nullptr;
       service_handle_ = nullptr;
-      use_executor_callback_ = false;
       return;
     }
 
@@ -214,7 +213,6 @@ private:
   std::condition_variable * conditionVariable_ RCPPUTILS_TSA_GUARDED_BY(internalMutex_);
 
   ExecutorEventCallback executor_callback_{nullptr};
-  bool use_executor_callback_{false};
   const void * service_handle_{nullptr};
   const void * executor_context_{nullptr};
   std::mutex executor_callback_mutex_;

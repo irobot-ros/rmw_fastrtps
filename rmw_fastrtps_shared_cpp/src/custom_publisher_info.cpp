@@ -42,7 +42,7 @@ PubListener::on_offered_deadline_missed(
   // Callback: add the change in qos event to the event queue
   std::unique_lock<std::mutex> lock_mutex(executor_callback_mutex_);
 
-  if(use_executor_callback_) {
+  if(executor_callback_){
     executor_callback_(executor_context_, { waitable_handle_, WAITABLE_EVENT });
   } else {
     unread_events_count_++;
@@ -69,7 +69,7 @@ void PubListener::on_liveliness_lost(
   // Callback: add the change in qos event to the event queue
   std::unique_lock<std::mutex> lock_mutex(executor_callback_mutex_);
 
-  if(use_executor_callback_) {
+  if(executor_callback_) {
     executor_callback_(executor_context_, { waitable_handle_, WAITABLE_EVENT });
   } else {
     unread_events_count_++;
@@ -103,14 +103,13 @@ void PubListener::eventSetExecutorCallback(
     executor_context_ = executor_context;
     executor_callback_ = callback;
     waitable_handle_ = waitable_handle;
-    use_executor_callback_ = true;
   }
-  else {
+  else
+  {
     // Unset callback: If any of the pointers is NULL, do not use callback.
     executor_context_ = nullptr;
     executor_callback_ = nullptr;
     waitable_handle_ = nullptr;
-    use_executor_callback_ = false;
     return;
   }
 

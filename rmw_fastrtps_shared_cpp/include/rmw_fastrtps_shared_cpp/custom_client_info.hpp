@@ -112,7 +112,7 @@ public:
           // Add the client event to the event queue
           std::unique_lock<std::mutex> lock_mutex(executor_callback_mutex_);
 
-          if(use_executor_callback_) {
+          if(executor_callback_) {
             executor_callback_(executor_context_, { client_handle_, CLIENT_EVENT });
           } else {
             unread_count_++;
@@ -189,14 +189,13 @@ public:
       executor_context_ = executor_context;
       executor_callback_ = callback;
       client_handle_ = client_handle;
-      use_executor_callback_ = true;
     }
-    else {
+    else
+    {
        // Unset callback: If any of the pointers is NULL, do not use callback.
       executor_context_ = nullptr;
       executor_callback_ = nullptr;
       client_handle_ = nullptr;
-      use_executor_callback_ = false;
       return;
     }
 
@@ -230,7 +229,6 @@ private:
   std::set<eprosima::fastrtps::rtps::GUID_t> publishers_;
 
   ExecutorEventCallback executor_callback_{nullptr};
-  bool use_executor_callback_{false};
   const void * client_handle_{nullptr};
   const void * executor_context_{nullptr};
   std::mutex executor_callback_mutex_;

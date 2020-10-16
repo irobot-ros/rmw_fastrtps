@@ -77,7 +77,6 @@ public:
     bool use_previous_events) = 0;
 
   ExecutorEventCallback executor_callback_{nullptr};
-  bool use_executor_callback_{false};
   const void * executor_context_{nullptr};
   const void * waitable_handle_{nullptr};
   uint64_t unread_events_count_ = 0;

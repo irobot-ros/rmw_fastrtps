@@ -37,10 +37,12 @@ public:
   {
     std::unique_lock<std::mutex> lock_mutex(executor_callback_mutex_);
 
-    if(use_executor_callback_) {
+    if(executor_callback_)
+    {
       executor_callback_(executor_context_, { waitable_handle_, WAITABLE_EVENT });
     }
-    else {
+    else
+    {
       std::lock_guard<std::mutex> lock(internalMutex_);
 
       if (conditionMutex_ != nullptr) {
@@ -103,14 +105,13 @@ public:
       executor_context_ = executor_context;
       executor_callback_ = callback;
       waitable_handle_ = waitable_handle;
-      use_executor_callback_ = true;
     }
-    else {
+    else
+    {
       // Unset callback: If any of the pointers is NULL, do not use callback.
       executor_context_ = nullptr;
       executor_callback_ = nullptr;
       waitable_handle_ = nullptr;
-      use_executor_callback_ = false;
       return;
     }
 
@@ -133,7 +134,6 @@ private:
 
   ExecutorEventCallback executor_callback_{nullptr};
   const void * waitable_handle_{nullptr};
-  bool use_executor_callback_{false};
   const void * executor_context_{nullptr};
   std::mutex executor_callback_mutex_;
   uint64_t unread_count_ = 0;
