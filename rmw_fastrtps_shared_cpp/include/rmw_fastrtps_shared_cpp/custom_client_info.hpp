@@ -189,9 +189,7 @@ public:
       executor_context_ = executor_context;
       executor_callback_ = callback;
       client_handle_ = client_handle;
-    }
-    else
-    {
+    } else {
        // Unset callback: If any of the pointers is NULL, do not use callback.
       executor_context_ = nullptr;
       executor_callback_ = nullptr;
