@@ -394,6 +394,15 @@ __rmw_get_subscriptions_info_by_topic(
 
 RMW_FASTRTPS_SHARED_CPP_PUBLIC
 rmw_ret_t
+__rmw_qos_profile_check_compatible(
+  const rmw_qos_profile_t publisher_profile,
+  const rmw_qos_profile_t subscription_profile,
+  rmw_qos_compatibility_type_t * compatibility,
+  char * reason,
+  size_t reason_size);
+
+RMW_FASTRTPS_SHARED_CPP_PUBLIC
+rmw_ret_t
 __rmw_subscription_set_listener_callback(
   rmw_subscription_t * rmw_subscription,
   rmw_listener_callback_t callback,

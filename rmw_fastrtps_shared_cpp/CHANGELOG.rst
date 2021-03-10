@@ -2,6 +2,15 @@
 Changelog for package rmw_fastrtps_shared_cpp
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+4.4.0 (2021-03-01)
+------------------
+* Add RMW function to check QoS compatibility (`#511 <https://github.com/ros2/rmw_fastrtps/issues/511>`_)
+* Capture cdr exceptions (`#505 <https://github.com/ros2/rmw_fastrtps/issues/505>`_)
+* Contributors: Jacob Perron, Miguel Company
+
+4.3.0 (2021-01-25)
+------------------
+
 4.2.0 (2020-12-10)
 ------------------
 * Make sure to lock the mutex protecting client_endpoints\_. (`#492 <https://github.com/ros2/rmw_fastrtps/issues/492>`_)
