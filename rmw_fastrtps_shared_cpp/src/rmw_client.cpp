@@ -139,4 +139,46 @@ __rmw_client_set_on_new_response_callback(
     callback);
   return RMW_RET_OK;
 }
+
+rmw_ret_t
+__rmw_client_get_actual_qos(
+  const rmw_client_t * client,
+  rmw_qos_profile_t * qos)
+{
+  auto info = static_cast<CustomClientInfo *>(client->data);
+
+  eprosima::fastdds::dds::DataReader * fastdds_dr = info->response_reader_;
+  eprosima::fastdds::dds::DataWriter * fastdds_dw = info->request_writer_;
+
+  rmw_qos_profile_t dr_qos = rmw_qos_profile_default;
+  rmw_qos_profile_t dw_qos = rmw_qos_profile_default;
+
+  dds_qos_to_rmw_qos(fastdds_dr->get_qos(), &dr_qos);
+  dds_qos_to_rmw_qos(fastdds_dw->get_qos(), &dw_qos);
+
+  // Check if the QoS of the data reader and the data writer match
+  if (dr_qos.history != dw_qos.history ||
+    dr_qos.depth != dw_qos.depth ||
+    dr_qos.reliability != dw_qos.reliability ||
+    dr_qos.durability != dw_qos.durability ||
+    dr_qos.liveliness != dw_qos.liveliness ||
+    dr_qos.deadline.sec != dw_qos.deadline.sec ||
+    dr_qos.deadline.nsec != dw_qos.deadline.nsec ||
+    dr_qos.lifespan.sec != dw_qos.lifespan.sec ||
+    dr_qos.lifespan.nsec != dw_qos.lifespan.nsec ||
+    dr_qos.liveliness_lease_duration.sec != dw_qos.liveliness_lease_duration.sec ||
+    dr_qos.liveliness_lease_duration.nsec != dw_qos.liveliness_lease_duration.nsec ||
+    dr_qos.avoid_ros_namespace_conventions != dw_qos.avoid_ros_namespace_conventions)
+  {
+    // This situation can happen if we set system default settings for qos.
+    // As no qos is defined by the user, the dds han chose to assign one qos policy for the
+    // reader and a different for the writer. Currently seems to only happen to durability,
+    // which is set to volatile for data readers, and transient local for data writers.
+    RMW_SET_ERROR_MSG("client's datawriter QoS does not match client's datareader QoS");
+    return RMW_RET_ERROR;
+  }
+
+  *qos = dw_qos;
+  return RMW_RET_OK;
+}
 }  // namespace rmw_fastrtps_shared_cpp

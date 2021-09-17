@@ -471,10 +471,22 @@ __rmw_service_set_on_new_request_callback(
 
 RMW_FASTRTPS_SHARED_CPP_PUBLIC
 rmw_ret_t
+__rmw_service_get_actual_qos(
+  const rmw_service_t * service,
+  rmw_qos_profile_t * qos);
+
+RMW_FASTRTPS_SHARED_CPP_PUBLIC
+rmw_ret_t
 __rmw_client_set_on_new_response_callback(
   rmw_client_t * rmw_client,
   rmw_event_callback_t callback,
   const void * user_data);
+
+RMW_FASTRTPS_SHARED_CPP_PUBLIC
+rmw_ret_t
+__rmw_client_get_actual_qos(
+  const rmw_client_t * client,
+  rmw_qos_profile_t * qos);
 
 RMW_FASTRTPS_SHARED_CPP_PUBLIC
 rmw_ret_t
