@@ -505,4 +505,20 @@ rmw_client_set_on_new_response_callback(
     callback,
     user_data);
 }
+
+rmw_ret_t
+rmw_client_get_actual_qos(
+  const rmw_client_t * client,
+  rmw_qos_profile_t * qos)
+{
+  RMW_CHECK_ARGUMENT_FOR_NULL(client, RMW_RET_INVALID_ARGUMENT);
+  RMW_CHECK_TYPE_IDENTIFIERS_MATCH(
+    client,
+    client->implementation_identifier,
+    eprosima_fastrtps_identifier,
+    return RMW_RET_INCORRECT_RMW_IMPLEMENTATION);
+  RMW_CHECK_ARGUMENT_FOR_NULL(qos, RMW_RET_INVALID_ARGUMENT);
+
+  return rmw_fastrtps_shared_cpp::__rmw_client_get_actual_qos(client, qos);
+}
 }  // extern "C"
