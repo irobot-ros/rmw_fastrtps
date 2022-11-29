@@ -217,10 +217,9 @@ SubListener::set_on_new_message_callback(
   std::unique_lock<std::mutex> lock_mutex(on_new_message_m_);
 
   if (callback) {
-    auto unread_messages = get_unread_messages();
-
-    if (0 < unread_messages) {
-      callback(user_data, unread_messages);
+    if (0 < unread_msgs_) {
+      callback(user_data, unread_msgs_);
+      unread_msgs_ = 0;
     }
 
     new_message_user_data_ = user_data;

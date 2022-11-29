@@ -212,10 +212,10 @@ public:
   {
     std::unique_lock<std::mutex> lock_mutex(on_new_request_m_);
 
-    auto unread_requests = get_unread_resquests();
-
-    if (0u < unread_requests) {
-      on_new_request_cb_(user_data_, unread_requests);
+    if (on_new_request_cb_) {
+      on_new_request_cb_(user_data_, 1);
+    } else {
+      unread_requests_++;
     }
   }
 
@@ -229,10 +229,9 @@ public:
     std::unique_lock<std::mutex> lock_mutex(on_new_request_m_);
 
     if (callback) {
-      auto unread_requests = get_unread_resquests();
-
-      if (0 < unread_requests) {
-        callback(user_data, unread_requests);
+      if (0 < unread_requests_) {
+        callback(user_data, unread_requests_);
+        unread_requests_ = 0;
       }
 
       user_data_ = user_data;
@@ -257,7 +256,7 @@ private:
   rmw_event_callback_t on_new_request_cb_{nullptr};
 
   const void * user_data_{nullptr};
-
+  size_t unread_requests_{0};
   std::mutex on_new_request_m_;
 };
 

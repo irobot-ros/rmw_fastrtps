@@ -90,11 +90,9 @@ public:
     std::unique_lock<std::mutex> lock_mutex(on_new_response_m_);
 
     if (on_new_response_cb_) {
-      auto unread_responses = get_unread_responses();
-
-      if (0 < unread_responses) {
-        on_new_response_cb_(user_data_, unread_responses);
-      }
+      on_new_response_cb_(user_data_, 1);
+    } else {
+      unread_responses_++;
     }
   }
 
@@ -130,10 +128,9 @@ public:
     std::unique_lock<std::mutex> lock_mutex(on_new_response_m_);
 
     if (callback) {
-      auto unread_responses = get_unread_responses();
-
-      if (0 < unread_responses) {
-        callback(user_data, unread_responses);
+      if (0 < unread_responses_) {
+        callback(user_data, unread_responses_);
+        unread_responses_ = 0;
       }
 
       user_data_ = user_data;
@@ -157,6 +154,7 @@ private:
 
   std::set<eprosima::fastrtps::rtps::GUID_t> publishers_;
 
+  size_t unread_responses_{0};
   rmw_event_callback_t on_new_response_cb_{nullptr};
 
   const void * user_data_{nullptr};

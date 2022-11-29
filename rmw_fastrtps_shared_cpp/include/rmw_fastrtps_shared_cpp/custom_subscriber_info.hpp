@@ -116,11 +116,9 @@ public:
     std::unique_lock<std::mutex> lock_mutex(on_new_message_m_);
 
     if (on_new_message_cb_) {
-      auto unread_messages = get_unread_messages();
-
-      if (0 < unread_messages) {
-        on_new_message_cb_(new_message_user_data_, unread_messages);
-      }
+      on_new_message_cb_(new_message_user_data_, 1);
+    } else {
+      unread_msgs_++;
     }
   }
 
@@ -210,6 +208,7 @@ private:
   std::set<eprosima::fastrtps::rtps::GUID_t> publishers_ RCPPUTILS_TSA_GUARDED_BY(
     discovery_m_);
 
+  size_t unread_msgs_{0};
   rmw_event_callback_t on_new_message_cb_{nullptr};
 
   const void * new_message_user_data_{nullptr};
