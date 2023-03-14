@@ -148,7 +148,8 @@ public:
       }
     }
     // Wait for subscription
-    if (!wait_for_subscription(guid, std::chrono::milliseconds(100))) {
+    if (!wait_for_subscription(guid, std::chrono::milliseconds(3000))) {
+      std::cerr << "ERROR: Service didn't find client in 3 seconds." << std::endl;
       return client_present_t::MAYBE;
     }
     return client_present_t::YES;
