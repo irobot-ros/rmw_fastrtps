@@ -134,6 +134,17 @@ rmw_create_publisher(
 }
 
 rmw_ret_t
+rmw_publisher_count_non_local_matched_subscriptions(
+  const rmw_publisher_t * publisher,
+  size_t * non_local_subscription_count)
+{
+  static_cast<void>(publisher);
+  static_cast<void>(non_local_subscription_count);
+  RMW_SET_ERROR_MSG("rmw_publisher_count_non_local_matched_subscriptions not implemented for rmw_fastrtps_cpp");
+  return RMW_RET_UNSUPPORTED;
+}
+
+rmw_ret_t
 rmw_publisher_count_matched_subscriptions(
   const rmw_publisher_t * publisher,
   size_t * subscription_count)
