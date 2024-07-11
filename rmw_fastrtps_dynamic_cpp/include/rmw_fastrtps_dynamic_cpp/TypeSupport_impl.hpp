@@ -972,6 +972,11 @@ bool TypeSupport<MembersType>::deserializeROSmessage(
       "'Bad alloc' exception deserializing message of type %s.",
       getName());
     return false;
+  } catch (const std::length_error &) {
+    RMW_SET_ERROR_MSG_WITH_FORMAT_STRING(
+      "'length error' exception deserializing message of type %s.",
+      getName());
+    return false;
   }
 
   return true;
